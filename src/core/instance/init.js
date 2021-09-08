@@ -12,10 +12,16 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
 
+/**
+ * 定义 Vue.prototype._init 方法
+ * @param {*} Vue
+ */
 export function initMixin (Vue: Class<Component>) {
+  // 负责 vue 实例的初始化过程
   Vue.prototype._init = function (options?: Object) {
+    // Vue 实例
     const vm: Component = this
-    // a uid
+    // 每个 Vue 实例都有一个_uid， 并且依次递增
     vm._uid = uid++
 
     let startTag, endTag
@@ -28,13 +34,20 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
-    // merge options
+    // 处理/合并组件配置项
     if (options && options._isComponent) {
-      // optimize internal component instantiation
-      // since dynamic options merging is pretty slow, and none of the
-      // internal component options needs special treatment.
+      /**
+       * 每个子组件初始化时走这里，这里只做了一些性能优化
+       * 将组件配置对象上的一些深层次属性放到 vm.$options 选项中，以提高代码的执行效率
+       */
       initInternalComponent(vm, options)
     } else {
+      /**
+       * 初始化根组件时走这里，合并 Vue 的全局配置到根组件的局部配置，比如 Vue.component 注册的全局组件会合并到 根实例的 components 选项中
+       * 至于每个子组件的选项合并则发生在两个地方：
+       *   1、Vue.component 方法注册的全局组件在注册时做了选项合并
+       *   2、{ components: { xx } } 方式注册的局部组件在执行编译器生成的 render 函数时做了选项合并，包括根组件中的 components 配置
+       */
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -90,10 +103,14 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+/**
+ * 定义 解析构造函数配置 函数
+ * @param {*} Ctor
+ * @returns
+ */
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {
-    debugger
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
     if (superOptions !== cachedSuperOptions) {
