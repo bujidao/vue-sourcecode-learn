@@ -110,6 +110,10 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+/**
+ * 初始化 data 字段
+ * @param {*} vm
+ */
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
@@ -130,6 +134,10 @@ function initData (vm: Component) {
   let i = keys.length
   while (i--) {
     const key = keys[i]
+    /**
+     * 检验 data 的属性
+     * 禁止 data 的属性与 methods 里面的方法重名
+     */
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -138,6 +146,10 @@ function initData (vm: Component) {
         )
       }
     }
+    /**
+     * 检验 data 的属性
+     * 禁止 data 的属性与 props 里面的属性重名
+     */
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
