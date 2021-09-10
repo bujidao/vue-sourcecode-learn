@@ -146,6 +146,8 @@ function remove (arr, item) {
 /**
  * Check whether an object has the property.
  */
+// 直接使用 Object 原型链上真正的 hasOwnProperty 方法
+// 保护了如果某个对象占用了 hasOwnProperty 这种情况
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 function hasOwn (obj, key) {
   return hasOwnProperty.call(obj, key)
@@ -8907,7 +8909,7 @@ var TemplateRenderer = function TemplateRenderer (options) {
   this.inject = options.inject !== false;
   // if no template option is provided, the renderer is created
   // as a utility object for rendering assets like preload links and scripts.
-    
+
   var template = options.template;
   this.parsedTemplate = template
     ? typeof template === 'string'

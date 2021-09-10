@@ -62,19 +62,30 @@ export function initState (vm: Component) {
   }
 }
 
+/**
+ * 初始化 props
+ * @param {*} vm
+ * @param {*} propsOptions
+ */
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
+  /**
+   * 代码优化
+   * 当 props 更新的时候，为了避免每次都枚举 props, 因此将 props 的 key 进行缓存
+   */
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
   // root instance props should be converted
   if (!isRoot) {
     toggleObserving(false)
   }
+  debugger
   for (const key in propsOptions) {
     keys.push(key)
+    // 校验 props
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {

@@ -7,6 +7,8 @@
 <body>
   <div id="app">
     {{ msg }}
+    <hr>
+    {{ chi }}
   </div>
   <script src="../dist/vue.js"></script>
   <script>
@@ -14,6 +16,13 @@
       el: '#app',
       data: {
         msg: 'hello vue'
+      },
+      props: {
+        chi: {
+          type: 'String',
+          required: false,
+          default: ['Hi props']
+        }
       }
     })
   </script>

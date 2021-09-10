@@ -29,9 +29,12 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+/**
+ * 初始化实例的生命周期
+ * @param {*} vm
+ */
 export function initLifecycle (vm: Component) {
   const options = vm.$options
-  debugger
 
   // locate first non-abstract parent
   let parent = options.parent

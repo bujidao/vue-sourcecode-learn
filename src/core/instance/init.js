@@ -43,10 +43,12 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       /**
-       * 初始化根组件时走这里，合并 Vue 的全局配置到根组件的局部配置，比如 Vue.component 注册的全局组件会合并到 根实例的 components 选项中
+       * 初始化根组件时走这里，合并 Vue 的全局配置到根组件的局部配置，
+       * 比如 Vue.component 注册的全局组件会合并到 根实例的 components 选项中
        * 至于每个子组件的选项合并则发生在两个地方：
        *   1、Vue.component 方法注册的全局组件在注册时做了选项合并
-       *   2、{ components: { xx } } 方式注册的局部组件在执行编译器生成的 render 函数时做了选项合并，包括根组件中的 components 配置
+       *   2、{ components: { xx } } 方式注册的局部组件在执行编译器生成的 render 函数时做了选项合并，
+       *      包括根组件中的 components 配置
        */
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
@@ -62,6 +64,7 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
+    // 初始化实例的生命周期
     initLifecycle(vm)
     initEvents(vm)
     initRender(vm)
