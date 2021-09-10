@@ -55,10 +55,20 @@ export function toRawType (value: any): string {
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  */
+/**
+ * 严格判断obj类型是否是对象, 并返回boolean
+ * @param {*} obj
+ * @returns
+ */
 export function isPlainObject (obj: any): boolean {
   return _toString.call(obj) === '[object Object]'
 }
 
+/**
+ * 严格判断obj类型是否是RegExp, 并返回boolean
+ * @param {*} v
+ * @returns
+ */
 export function isRegExp (v: any): boolean {
   return _toString.call(v) === '[object RegExp]'
 }

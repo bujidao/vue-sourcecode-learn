@@ -6,23 +6,216 @@
 </head>
 <body>
   <div id="app">
-    {{ msg }}
+    {{parentMsg}}
     <hr>
-    {{ chi }}
+    <component-a :msg="childMsg">
+      {{slotMsg}}
+    </component-a>
   </div>
   <script src="../dist/vue.js"></script>
   <script>
-    const vm = new Vue({
-      el: '#app',
-      data: {
-        msg: 'hello vue'
+    // 子元素
+    var ComponentA = {
+      name: 'ComponentA',
+      beforeCreate() {
+        console.log('beforeCreate')
+      },
+      created() {
+        console.log('created')
+      },
+      beforeMount() {
+        console.log('beforeMount')
+      },
+      mounted() {
+        console.log('mounted')
+      },
+      beforeUpdate() {
+        console.log('beforeUpdate')
+      },
+      updated() {
+        console.log('updated')
+      },
+      beforeDestroy() {
+        console.log('beforeDestroy')
+      },
+      destroyed() {
+        console.log('destroyed')
+      },
+      data() {
+        return {
+          count: 0,
+          countDisplayText: '',
+          fName: '',
+          lName: '',
+          sex: 1
+        }
+      },
+      filters: {
+        filterSex(val) {
+          return val == 1 ? '男' : '女'
+        }
       },
       props: {
-        chi: {
-          type: "string",
-          default: 'hi props',
-          required: true
+        msg: {
+          type: String,
+          required: true,
+          default: 'child default msg'
+        },
+        arrMsg: {
+          type: Array,
+          required: false,
+          default: function() {
+            return ['apple', 'banana', 'orange']
+          }
         }
+      },
+      methods: {
+        countAdd() {
+          this.count += 1
+        },
+        countDesc() {
+          this.count -= 1
+        }
+      },
+      computed: {
+        fullName() {
+          return this.fName + ' ' + this.lName
+        }
+      },
+      watch: {
+        count: {
+          handler(o, n) {
+            this.countDisplayText = o + '次'
+          },
+          immediate: true,
+          deep: true
+        }
+      },
+      render: function(createElement) {
+        return createElement(
+          'div',
+          [
+            createElement(
+              'p',
+              this.msg
+            ),
+            createElement(
+              'button',
+              {
+                on: {
+                  click: this.countDesc
+                }
+              },
+              `-`
+            ),
+            createElement(
+              'span',
+              {
+                style: {
+                  display: 'inline-block',
+                  width: '50px',
+                  'text-align': 'center'
+                }
+              },
+              `${this.countDisplayText}`
+            ),
+            createElement(
+              'button',
+              {
+                on: {
+                  click: this.countAdd
+                }
+              },
+              `+`
+            ),
+            createElement(
+              'ul',
+              [
+                this.arrMsg.map(element => {
+                  return createElement(
+                    'li',
+                    element
+                  )
+                })
+              ]
+            ),
+            createElement(
+              'input',
+              {
+                attrs: {
+                  placeholder: '姓',
+                  autocomplete: 'asdfads'
+                },
+                on: {
+                  input: (e) => {
+                    this.fName = e.target.value
+                  }
+                }
+              }
+            ),
+            createElement(
+              'input',
+              {
+                attrs: {
+                  placeholder: '名',
+                  autocomplete: 'asdf'
+                },
+                on: {
+                  input: (e) => {
+                    this.lName = e.target.value
+                  }
+                }
+              }
+            ),
+            createElement(
+              'div',
+              [
+                createElement(
+                  'span',
+                  '全名: '
+                ),
+                createElement(
+                  'span',
+                  this.fullName
+                )
+              ]
+            ),
+            createElement(
+              'div',
+              [
+                createElement(
+                  'span',
+                  '性别: '
+                ),
+                createElement(
+                  'span',
+                  this.$options.filters['filterSex'](this.sex)
+                )
+              ]
+            ),
+            createElement(
+              'hr'
+            ),
+            createElement(
+              'div',
+              this.$slots.default
+            )
+          ]
+        )
+      }
+    }
+
+    const vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          parentMsg: 'this is parent',
+          childMsg: 'this is child',
+          slotMsg: 'this is slot'
+        }
+      },
+      components: {
+        'component-a': ComponentA
       }
     })
   </script>

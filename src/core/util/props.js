@@ -18,14 +18,24 @@ type PropOptions = {
   validator: ?Function
 };
 
+/**
+ * 校验props
+ * @param {Array} key
+ * @param {Object} propOptions
+ * @param {Object} propsData
+ * @param {*} vm
+ * @returns
+ */
 export function validateProp (
   key: string,
   propOptions: Object,
   propsData: Object,
   vm?: Component
 ): any {
+  // 获取当前 props[key] 的所有参数
   const prop = propOptions[key]
-  // 
+  debugger
+  // 判断 propsData 对象中是否已经存在 key 属性
   const absent = !hasOwn(propsData, key)
   let value = propsData[key]
   // boolean casting
@@ -63,15 +73,19 @@ export function validateProp (
 }
 
 /**
- * Get the default value of a prop.
+ * 获取 prop 的默认值
  */
 function getPropDefaultValue (vm: ?Component, prop: PropOptions, key: string): any {
-  // no default, return undefined
+  // 判断 prop 是否有 default 属性，如果没有这个属性，代表没有默认值，直接返回
   if (!hasOwn(prop, 'default')) {
     return undefined
   }
+  // 取到 prop 的默认值
   const def = prop.default
-  // warn against non-factory defaults for Object & Array
+  /**
+   * 判断 prop 的默认值
+   * 如果默认值的类型是 Object 或 Array ，则提示需要以函数的形式返回默认值
+   */
   if (process.env.NODE_ENV !== 'production' && isObject(def)) {
     warn(
       'Invalid default value for prop "' + key + '": ' +
@@ -80,6 +94,7 @@ function getPropDefaultValue (vm: ?Component, prop: PropOptions, key: string): a
       vm
     )
   }
+
   // the raw prop value was also undefined from previous render,
   // return previous default value to avoid unnecessary watcher trigger
   if (vm && vm.$options.propsData &&
@@ -96,7 +111,13 @@ function getPropDefaultValue (vm: ?Component, prop: PropOptions, key: string): a
 }
 
 /**
- * Assert whether a prop is valid.
+ * 判断 prop 是否有效
+ * @param {*} prop
+ * @param {*} name
+ * @param {*} value
+ * @param {*} vm
+ * @param {*} absent
+ * @returns
  */
 function assertProp (
   prop: PropOptions,
@@ -187,6 +208,14 @@ const functionTypeCheckRE = /^\s*function (\w+)/
  * Use function string name to check built-in types,
  * because a simple equality check will fail when running
  * across different vms / iframes.
+ */
+/**
+ * 获取函数名
+ * 例如:
+ * fn: function abc(){}
+ * match res: abc
+ * @param {*} fn 函数体
+ * @returns
  */
 function getType (fn) {
   const match = fn && fn.toString().match(functionTypeCheckRE)

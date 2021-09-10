@@ -76,6 +76,12 @@ export function createASTElement (
 /**
  * Convert HTML string to AST.
  */
+/**
+ * 把html转为抽象语法树
+ * @param {*} template
+ * @param {*} options
+ * @returns
+ */
 export function parse (
   template: string,
   options: CompilerOptions
@@ -915,6 +921,31 @@ function parseModifiers (name: string): Object | void {
     return ret
   }
 }
+
+/**
+
+格式转换
+
+把数组对象转换为对象
+
+形如:
+[
+  {
+    name: 'yourname',
+    value: 'yourvalue'
+  },
+  {
+    name: 'yourname2',
+    value: 'yourvalue2'
+  }
+]
+转换为:
+{
+  yourname: 'yourvalue',
+  yourname2: 'yourvalue2'
+}
+
+ */
 
 function makeAttrsMap (attrs: Array<Object>): Object {
   const map = {}
